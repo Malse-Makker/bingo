@@ -28,12 +28,13 @@ def active_session():
 
 
 def new_card_numbers():
-    """Nine unique numbers between 10 and 99.
+    """Nine unique numbers between 10 and 99, in random order.
 
     Unique *within* one card only. Two players can both hold 33; a single player
-    can never hold 33 twice.
+    can never hold 33 twice. Deliberately not sorted: the grid should look
+    shuffled, not like a counting exercise.
     """
-    return sorted(random.sample(range(NUMBER_MIN, NUMBER_MAX + 1), CARD_SIZE))
+    return random.sample(range(NUMBER_MIN, NUMBER_MAX + 1), CARD_SIZE)
 
 
 def get_or_create_card(session, user):
