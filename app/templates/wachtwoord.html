@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Je wachtwoord{% endblock %}
+
+{% block content %}
+<section class="kaart smal">
+  <h1>Hallo {{ naam }}</h1>
+  <p>Dit is je wachtwoord. Schrijf het op, je ziet het hierna niet meer.</p>
+
+  <p class="wachtwoord-vak">{{ wachtwoord }}</p>
+
+  <p class="hulptekst">
+    <i class="fa-solid fa-hourglass-half" aria-hidden="true"></i>
+    Je account moet nog goedgekeurd worden door de beheerder. Zodra dat gebeurd is,
+    kun je inloggen en meespelen.
+  </p>
+
+  <a class="knop primair" href="{{ url_for('auth.login') }}">
+    <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Naar inloggen
+  </a>
+</section>
+{% endblock %}

@@ -1,0 +1,10 @@
+venv/
+data/
+__pycache__/
+*.py[cod]
+.env
+.git/
+.github/
+*.db
+.DS_Store
+README.md

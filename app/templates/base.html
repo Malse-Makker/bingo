@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="theme-color" content="#eff1f5" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#303446" media="(prefers-color-scheme: dark)">
+  <title>{% block title %}Bingo{% endblock %} &middot; Makkers Bingo</title>
+
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}">
+  <link rel="icon" href="{{ url_for('static', filename='img/icon-192.png') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/icon-192.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome/css/fontawesome.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome/css/solid.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {# Not deferred: the theme must be set before the first paint. #}
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('spel.index') }}">
+      <i class="fa-solid fa-dice" aria-hidden="true"></i>
+      <span>Bingo</span>
+    </a>
+    <nav class="topbar-acties">
+      <button type="button" id="thema-knop" class="icoonknop" title="Thema wisselen"
+              aria-label="Thema wisselen">
+        <i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i>
+      </button>
+      {% if current_user.is_authenticated %}
+        {% if current_user.is_admin %}
+          <a class="icoonknop" href="{{ url_for('admin.index') }}" title="Beheer"
+             aria-label="Beheer">
+            <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+          </a>
+        {% endif %}
+        <form method="post" action="{{ url_for('auth.logout') }}" class="inline-form">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="icoonknop" title="Uitloggen" aria-label="Uitloggen">
+            <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
+          </button>
+        </form>
+      {% endif %}
+    </nav>
+  </header>
+
+  <main class="inhoud">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="meldingen" id="meldingen">
+          {% for categorie, bericht in messages %}
+            <p class="melding melding-{{ categorie }}">{{ bericht }}</p>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="meldingen" id="meldingen"></div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="voettekst">
+    <a href="{{ projects_url }}">projecten.makkers.net</a>
+    <span aria-hidden="true">&middot;</span>
+    <a href="{{ github_url }}">
+      <i class="fa-solid fa-code-branch" aria-hidden="true"></i> broncode
+    </a>
+    <span aria-hidden="true">&middot;</span>
+    <span class="versie">v{{ app_version }}{% if git_commit %} ({{ git_commit }}){% endif %}</span>
+  </footer>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

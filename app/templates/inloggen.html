@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Inloggen{% endblock %}
+
+{% block content %}
+<section class="kaart smal">
+  <h1>Inloggen</h1>
+  <form method="post" class="formulier">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label for="naam">Naam</label>
+    <input type="text" id="naam" name="naam" value="{{ naam }}" autocomplete="username"
+           autocapitalize="none" required maxlength="20">
+
+    <label for="wachtwoord">Wachtwoord</label>
+    <input type="password" id="wachtwoord" name="wachtwoord"
+           autocomplete="current-password" required>
+
+    <button type="submit" class="knop primair">
+      <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Inloggen
+    </button>
+  </form>
+
+  <p class="hulptekst">
+    Nog geen account? <a href="{{ url_for('auth.register') }}">Maak er een aan</a>.
+    Je krijgt dan een wachtwoord van het spel zelf.
+  </p>
+</section>
+{% endblock %}

@@ -1,0 +1,62 @@
+# =============================================================================
+# Makkers Bingo - Docker Compose
+# =============================================================================
+# Services:
+#   web    Flask app on gunicorn (internal only, reached through nginx)
+#   nginx  reverse proxy, static assets, security headers, rate limiting
+#          (the only service published to the host, on BINGO_PORT)
+#
+# TLS and the public hostname (bingo.makkers.net) are handled upstream by
+# Nginx Proxy Manager, so nothing here terminates TLS.
+#
+# Start:  docker compose up -d --build
+# =============================================================================
+
+services:
+  web:
+    build: .
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    environment:
+      # Generate with: openssl rand -hex 32
+      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY is required}
+      # Password of the built-in admin account.
+      ADMIN_NAME: ${ADMIN_NAME:-mick}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?ADMIN_PASSWORD is required}
+      # Comma-separated words; each becomes a password repeated three times.
+      PASSWORD_WORDS: ${PASSWORD_WORDS:?PASSWORD_WORDS is required}
+      DATABASE_URL: sqlite:////app/data/bingo.db
+      COOKIE_SECURE: ${COOKIE_SECURE:-1}
+      DRAW_COOLDOWN_SECONDS: ${DRAW_COOLDOWN_SECONDS:-0}
+      GIT_COMMIT: ${GIT_COMMIT:-}
+    volumes:
+      - ${DATA_PATH:-./data}:/app/data
+    networks:
+      - intern
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request;urllib.request.urlopen('http://127.0.0.1:8000/healthz')\""]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on:
+      - web
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "${BINGO_PORT:-9877}:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./app/static:/srv/static:ro
+    networks:
+      - intern
+
+networks:
+  intern:
+    driver: bridge

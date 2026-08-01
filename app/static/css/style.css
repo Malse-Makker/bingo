@@ -1,0 +1,422 @@
+/* Makkers Bingo - Catppuccin Latte (light) and Frappe (dark).
+   The system preference decides by default; the header button overrides it. */
+
+:root,
+:root[data-thema="licht"] {
+  --base: #eff1f5;
+  --mantle: #e6e9ef;
+  --crust: #dce0e8;
+  --tekst: #4c4f69;
+  --subtekst: #6c6f85;
+  --vlak: #ccd0da;
+  --vlak2: #bcc0cc;
+  --rand: #9ca0b0;
+  --blauw: #1e66f5;
+  --mauve: #8839ef;
+  --groen: #40a02b;
+  --rood: #d20f39;
+  --geel: #df8e1d;
+  --perzik: #fe640b;
+  --schaduw: rgba(76, 79, 105, 0.12);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-thema="licht"]) {
+    --base: #303446;
+    --mantle: #292c3c;
+    --crust: #232634;
+    --tekst: #c6d0f5;
+    --subtekst: #a5adce;
+    --vlak: #414559;
+    --vlak2: #51576d;
+    --rand: #737994;
+    --blauw: #8caaee;
+    --mauve: #ca9ee6;
+    --groen: #a6d189;
+    --rood: #e78284;
+    --geel: #e5c890;
+    --perzik: #ef9f76;
+    --schaduw: rgba(0, 0, 0, 0.3);
+  }
+}
+
+:root[data-thema="donker"] {
+  --base: #303446;
+  --mantle: #292c3c;
+  --crust: #232634;
+  --tekst: #c6d0f5;
+  --subtekst: #a5adce;
+  --vlak: #414559;
+  --vlak2: #51576d;
+  --rand: #737994;
+  --blauw: #8caaee;
+  --mauve: #ca9ee6;
+  --groen: #a6d189;
+  --rood: #e78284;
+  --geel: #e5c890;
+  --perzik: #ef9f76;
+  --schaduw: rgba(0, 0, 0, 0.3);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--base);
+  color: var(--tekst);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+
+a { color: var(--blauw); }
+
+h1 { font-size: 1.4rem; margin: 0 0 0.5rem; }
+h2 { font-size: 1.1rem; margin: 0 0 0.75rem; }
+
+/* --- Header ------------------------------------------------------------- */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  padding-top: calc(0.75rem + env(safe-area-inset-top));
+  background: var(--mantle);
+  border-bottom: 1px solid var(--vlak);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--mauve);
+  text-decoration: none;
+}
+
+.topbar-acties { display: flex; align-items: center; gap: 0.25rem; }
+
+.icoonknop {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  border-radius: 0.6rem;
+  background: transparent;
+  color: var(--subtekst);
+  font-size: 1.05rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.icoonknop:hover, .icoonknop:focus-visible { background: var(--vlak); color: var(--tekst); }
+
+/* --- Layout ------------------------------------------------------------- */
+
+.inhoud {
+  flex: 1;
+  width: 100%;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.kaart {
+  background: var(--mantle);
+  border: 1px solid var(--vlak);
+  border-radius: 0.9rem;
+  padding: 1rem;
+  box-shadow: 0 1px 3px var(--schaduw);
+}
+
+.kaart.smal { max-width: 24rem; width: 100%; margin: 2rem auto; }
+.kaart.midden { text-align: center; }
+
+.kolommen {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 40rem) {
+  .kolommen { grid-template-columns: 1fr 1fr; }
+}
+
+.voettekst {
+  padding: 1rem;
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  text-align: center;
+  color: var(--subtekst);
+  font-size: 0.8rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.hulptekst { color: var(--subtekst); font-size: 0.9rem; }
+.leeg { color: var(--subtekst); font-style: italic; }
+.groot-icoon { font-size: 2.5rem; color: var(--geel); margin: 0 0 0.5rem; }
+
+/* --- Meldingen ---------------------------------------------------------- */
+
+.meldingen:empty { display: none; }
+
+.melding {
+  margin: 0 0 0.5rem;
+  padding: 0.6rem 0.85rem;
+  border-radius: 0.6rem;
+  border-left: 4px solid var(--blauw);
+  background: var(--mantle);
+  font-size: 0.92rem;
+}
+
+.melding-error { border-left-color: var(--rood); }
+.melding-success { border-left-color: var(--groen); }
+.melding-info { border-left-color: var(--blauw); }
+
+/* --- Formulieren -------------------------------------------------------- */
+
+.formulier { display: flex; flex-direction: column; gap: 0.35rem; }
+.formulier label { font-size: 0.85rem; color: var(--subtekst); margin-top: 0.5rem; }
+.inline-form { display: inline; margin: 0; }
+
+input[type="text"], input[type="password"], input[type="number"] {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--vlak2);
+  border-radius: 0.6rem;
+  background: var(--base);
+  color: var(--tekst);
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+input:focus-visible, button:focus-visible {
+  outline: 2px solid var(--mauve);
+  outline-offset: 2px;
+}
+
+.knop {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--vlak2);
+  border-radius: 0.6rem;
+  background: var(--vlak);
+  color: var(--tekst);
+  font-size: 0.95rem;
+  font-family: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.knop:hover { background: var(--vlak2); }
+.knop.primair { background: var(--mauve); border-color: var(--mauve); color: var(--crust); font-weight: 600; }
+.knop.primair:hover { filter: brightness(1.08); }
+.knop.gevaar { background: var(--rood); border-color: var(--rood); color: var(--crust); font-weight: 600; }
+.knop.klein { margin-top: 0; padding: 0.4rem 0.7rem; font-size: 0.8rem; }
+
+.nummer-form { display: flex; gap: 0.5rem; align-items: stretch; }
+.nummer-form input { flex: 1; }
+.nummer-form .knop { margin-top: 0; }
+
+.wachtwoord-vak {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 0.6rem;
+  background: var(--base);
+  border: 1px dashed var(--mauve);
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 1.15rem;
+  text-align: center;
+  word-break: break-all;
+  user-select: all;
+}
+
+/* --- Bingokaart --------------------------------------------------------- */
+
+.bingokaart {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.vakje-form { display: contents; }
+
+.vakje {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 2px solid var(--vlak2);
+  border-radius: 0.8rem;
+  background: var(--base);
+  color: var(--tekst);
+  font-size: clamp(1.5rem, 9vw, 2.2rem);
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform 0.08s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.vakje:active { transform: scale(0.96); }
+
+.vakje.gemarkeerd {
+  background: var(--groen);
+  border-color: var(--groen);
+  color: var(--crust);
+  text-decoration: line-through;
+  text-decoration-thickness: 3px;
+}
+
+/* A number that has been drawn but not yet crossed off. */
+.vakje.beschikbaar {
+  border-color: var(--geel);
+  animation: klop 1.4s ease-in-out infinite;
+}
+
+@keyframes klop {
+  0%, 100% { box-shadow: 0 0 0 0 transparent; }
+  50% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--geel) 35%, transparent); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vakje.beschikbaar { animation: none; }
+}
+
+/* --- Lijsten ------------------------------------------------------------ */
+
+.lijst, .ranglijst, .trekkingen, .nummerstats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lijst li, .ranglijst li, .trekkingen li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--vlak);
+}
+
+.lijst li:last-child, .ranglijst li:last-child, .trekkingen li:last-child { border-bottom: none; }
+
+.ranglijst { counter-reset: plek; }
+.ranglijst li { counter-increment: plek; }
+.ranglijst li:not(.leeg)::before {
+  content: counter(plek);
+  flex: 0 0 1.5rem;
+  color: var(--subtekst);
+  font-weight: 700;
+}
+
+.telling { color: var(--groen); font-weight: 700; }
+
+.acties { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+
+.badge {
+  margin-left: 0.4rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: var(--mauve);
+  color: var(--crust);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.trekkingen { max-height: 18rem; overflow-y: auto; }
+.trek-nummer { font-weight: 700; font-size: 1.1rem; flex: 0 0 2.5rem; }
+.trek-door { flex: 1; color: var(--subtekst); font-size: 0.85rem; }
+.trek-tijd { color: var(--rand); font-size: 0.8rem; }
+
+.nummerstats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
+  gap: 0.4rem;
+}
+
+.nummerstats li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.4rem;
+  border-radius: 0.5rem;
+  background: var(--base);
+}
+
+.stat-nummer { font-weight: 700; }
+.stat-aantal { color: var(--subtekst); font-size: 0.8rem; }
+
+.gevaarzone { border-color: var(--rood); }
+
+/* --- Winnaar + confetti ------------------------------------------------- */
+
+.winnaar-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: color-mix(in srgb, var(--crust) 75%, transparent);
+  overflow: hidden;
+}
+
+.winnaar-overlay[hidden] { display: none; }
+
+.winnaar-vak {
+  position: relative;
+  z-index: 2;
+  max-width: 22rem;
+  width: 100%;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background: var(--mantle);
+  border: 2px solid var(--geel);
+  text-align: center;
+  box-shadow: 0 10px 30px var(--schaduw);
+}
+
+.winnaar-tekst { margin: 0; font-size: 2rem; font-weight: 800; color: var(--geel); }
+.winnaar-naam { margin: 0.25rem 0 0; font-size: 1.2rem; }
+
+.confetti { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+
+.snipper {
+  position: absolute;
+  top: -5vh;
+  width: 0.6rem;
+  height: 0.9rem;
+  opacity: 0.9;
+  animation: val linear forwards;
+}
+
+@keyframes val {
+  from { transform: translateY(-10vh) rotate(0deg); }
+  to { transform: translateY(110vh) rotate(720deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confetti { display: none; }
+}

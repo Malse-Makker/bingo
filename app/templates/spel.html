@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Spelen{% endblock %}
+
+{% block content %}
+<section class="kaart">
+  <h1>Hoi {{ current_user.name }}</h1>
+  <p class="hulptekst">Sessie {{ sessie.id }}. Streep af wat er getrokken is.</p>
+
+  <div class="bingokaart" id="bingokaart">
+    {% for nummer in kaart.numbers %}
+      <form method="post" action="{{ url_for('spel.mark', index=loop.index0) }}"
+            class="vakje-form js-markeer">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="vakje{% if kaart.marked[loop.index0] %} gemarkeerd{% endif %}"
+                data-index="{{ loop.index0 }}" data-nummer="{{ nummer }}">
+          {{ nummer }}
+        </button>
+      </form>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="kaart">
+  <h2><i class="fa-solid fa-plus" aria-hidden="true"></i> Nummer toevoegen</h2>
+  <p class="hulptekst">
+    Kreeg je een nummer van een authenticator? Zet het hier in de trekking.
+  </p>
+  <form method="post" action="{{ url_for('spel.add_number') }}" class="nummer-form js-nummer">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="number" name="nummer" id="nummer" min="10" max="99"
+           inputmode="numeric" placeholder="10 - 99" required>
+    <button type="submit" class="knop primair">Toevoegen</button>
+  </form>
+</section>
+
+<div class="kolommen">
+  <section class="kaart">
+    <h2><i class="fa-solid fa-list-ol" aria-hidden="true"></i> Getrokken</h2>
+    <ul class="trekkingen" id="trekkingen">
+      {% for trekking in trekkingen %}
+        <li>
+          <span class="trek-nummer">{{ trekking.number }}</span>
+          <span class="trek-door">{{ trekking.user_name or 'verwijderd' }}</span>
+          <span class="trek-tijd">{{ trekking.created_at.strftime('%H:%M') }}</span>
+        </li>
+      {% else %}
+        <li class="leeg">Nog niets getrokken.</li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="kaart">
+    <h2><i class="fa-solid fa-trophy" aria-hidden="true"></i> Top 3</h2>
+    <ol class="ranglijst" id="ranglijst">
+      {% for speler in ranglijst %}
+        <li><span>{{ speler.name }}</span><span class="telling">{{ speler.count }}/9</span></li>
+      {% else %}
+        <li class="leeg">Nog geen spelers.</li>
+      {% endfor %}
+    </ol>
+  </section>
+</div>
+
+<div class="winnaar-overlay" id="winnaar-overlay" hidden>
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
+  <div class="winnaar-vak" role="alertdialog" aria-labelledby="winnaar-tekst">
+    <p class="groot-icoon"><i class="fa-solid fa-trophy" aria-hidden="true"></i></p>
+    <p class="winnaar-tekst" id="winnaar-tekst">HOERA!</p>
+    <p class="winnaar-naam" id="winnaar-naam"></p>
+    <button type="button" class="knop primair" id="winnaar-sluiten">Sluiten</button>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/spel.js') }}"
+        data-status-url="{{ url_for('spel.status') }}"
+        data-winnaar="{{ sessie.winner_name or '' }}"
+        data-ik="{{ current_user.name }}" defer></script>
+{% endblock %}

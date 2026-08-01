@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block title %}Beheer{% endblock %}
+
+{% block content %}
+<section class="kaart">
+  <h1><i class="fa-solid fa-sliders" aria-hidden="true"></i> Beheer</h1>
+  <p class="hulptekst">
+    Sessie {{ sessie.id }}, gestart op {{ sessie.started_at.strftime('%d-%m-%Y %H:%M') }}.
+    {% if sessie.winner_name %}
+      Gewonnen door <strong>{{ sessie.winner_name }}</strong>.
+    {% else %}
+      Nog geen winnaar.
+    {% endif %}
+  </p>
+  <p><a class="knop" href="{{ url_for('spel.index') }}">
+    <i class="fa-solid fa-dice" aria-hidden="true"></i> Naar mijn eigen kaart
+  </a></p>
+</section>
+
+{% if nieuw_wachtwoord %}
+<section class="kaart">
+  <h2>Nieuw wachtwoord voor {{ nieuw_voor }}</h2>
+  <p class="wachtwoord-vak">{{ nieuw_wachtwoord }}</p>
+  <p class="hulptekst">Geef dit door. Na het verlaten van deze pagina is het weg.</p>
+</section>
+{% endif %}
+
+<section class="kaart">
+  <h2><i class="fa-solid fa-user-check" aria-hidden="true"></i> Wacht op goedkeuring</h2>
+  {% if wachtenden %}
+    <ul class="lijst">
+      {% for gebruiker in wachtenden %}
+        <li>
+          <span>{{ gebruiker.name }}</span>
+          <span class="acties">
+            <form method="post" action="{{ url_for('admin.approve', user_id=gebruiker.id) }}"
+                  class="inline-form">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="knop klein primair">Goedkeuren</button>
+            </form>
+            <form method="post" action="{{ url_for('admin.delete', user_id=gebruiker.id) }}"
+                  class="inline-form js-bevestig"
+                  data-vraag="{{ gebruiker.name }} definitief verwijderen?">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="knop klein gevaar">Verwijderen</button>
+            </form>
+          </span>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="leeg">Niemand wacht op goedkeuring.</p>
+  {% endif %}
+</section>
+
+<section class="kaart">
+  <h2><i class="fa-solid fa-users" aria-hidden="true"></i> Gebruikers</h2>
+  <ul class="lijst">
+    {% for gebruiker in gebruikers %}
+      <li>
+        <span>
+          {{ gebruiker.name }}
+          {% if gebruiker.is_admin %}<span class="badge">beheerder</span>{% endif %}
+        </span>
+        <span class="acties">
+          <form method="post" action="{{ url_for('admin.reset_password', user_id=gebruiker.id) }}"
+                class="inline-form js-bevestig"
+                data-vraag="Nieuw wachtwoord maken voor {{ gebruiker.name }}? Het oude werkt daarna niet meer.">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="knop klein">Nieuw wachtwoord</button>
+          </form>
+          {% if not gebruiker.is_admin %}
+            <form method="post" action="{{ url_for('admin.delete', user_id=gebruiker.id) }}"
+                  class="inline-form js-bevestig"
+                  data-vraag="{{ gebruiker.name }} definitief verwijderen?">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="knop klein gevaar">Verwijderen</button>
+            </form>
+          {% endif %}
+        </span>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+
+<div class="kolommen">
+  <section class="kaart">
+    <h2><i class="fa-solid fa-ranking-star" aria-hidden="true"></i> Stand deze sessie</h2>
+    <ol class="ranglijst">
+      {% for speler in ranglijst %}
+        <li><span>{{ speler.name }}</span><span class="telling">{{ speler.count }}/9</span></li>
+      {% else %}
+        <li class="leeg">Nog geen spelers.</li>
+      {% endfor %}
+    </ol>
+  </section>
+
+  <section class="kaart">
+    <h2><i class="fa-solid fa-trophy" aria-hidden="true"></i> Scorebord aller tijden</h2>
+    <ol class="ranglijst">
+      {% for rij in scorebord %}
+        <li><span>{{ rij.naam }}</span><span class="telling">{{ rij.aantal }}x</span></li>
+      {% else %}
+        <li class="leeg">Nog nooit iemand gewonnen.</li>
+      {% endfor %}
+    </ol>
+  </section>
+</div>
+
+<section class="kaart">
+  <h2><i class="fa-solid fa-list-ol" aria-hidden="true"></i> Getrokken deze sessie</h2>
+  <ul class="trekkingen">
+    {% for trekking in trekkingen %}
+      <li>
+        <span class="trek-nummer">{{ trekking.number }}</span>
+        <span class="trek-door">{{ trekking.user_name or 'verwijderd' }}</span>
+        <span class="trek-tijd">{{ trekking.created_at.strftime('%d-%m %H:%M') }}</span>
+      </li>
+    {% else %}
+      <li class="leeg">Nog niets getrokken.</li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section class="kaart">
+  <h2><i class="fa-solid fa-chart-simple" aria-hidden="true"></i> Nummers over alle sessies</h2>
+  {% if nummerstats %}
+    <ul class="nummerstats">
+      {% for rij in nummerstats %}
+        <li><span class="stat-nummer">{{ rij.nummer }}</span><span class="stat-aantal">{{ rij.aantal }}x</span></li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="leeg">Nog geen trekkingen.</p>
+  {% endif %}
+</section>
+
+<section class="kaart gevaarzone">
+  <h2><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Sessie resetten</h2>
+  <p class="hulptekst">
+    Sluit de huidige sessie af en start een nieuwe. Iedereen krijgt een nieuwe kaart en
+    de trekking begint leeg. Er wordt niets weggegooid: de statistieken blijven staan.
+  </p>
+  <form method="post" action="{{ url_for('admin.reset_session') }}"
+        class="inline-form js-bevestig"
+        data-vraag="Weet je het zeker? De huidige sessie wordt afgesloten en iedereen krijgt een nieuwe kaart.">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="bevestig" value="ja">
+    <button type="submit" class="knop gevaar">Sessie resetten</button>
+  </form>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/beheer.js') }}" defer></script>
+{% endblock %}
