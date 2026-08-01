@@ -1,139 +1,147 @@
 # Makkers Bingo
 
-A small bingo web app for a group of friends. Every player gets a 3x3 card with
-nine random numbers between 10 and 99. Numbers enter the game when a player
-types in a code they got from one of the two authenticator apps. Once a number
-is in the session everyone holding it may cross it off. The first player with a
-full card wins, and everyone gets a popup with confetti.
+Een kleine bingo-webapp om met collega's te spelen. Iedere speler krijgt een
+3x3-kaart met negen willekeurige nummers tussen de 10 en 99. Nummers komen in
+het spel doordat spelers een code intikken die ze van een van de twee
+authenticator-apps krijgen. Zodra een nummer in de sessie staat, mag iedereen
+die het op zijn kaart heeft het afstrepen. Wie als eerste een volle kaart heeft
+wint, en iedereen krijgt een popup met confetti.
 
-Runs at [bingo.makkers.net](https://bingo.makkers.net). The interface is in
-Dutch; the code and this README are in English.
+Draait op [bingo.makkers.net](https://bingo.makkers.net). De interface en deze
+README zijn in het Nederlands, de code zelf is in het Engels.
 
-## Features
+## Functies
 
 ### Accounts
 
-- **Registration**: you pick a name, the app picks the password. The password is
-  one of the configured words repeated three times (`schaap` becomes
-  `schaapschaapschaap`) and is shown exactly once, right after registering.
-- **Approval**: a new account cannot log in until the admin approves it.
-- **Admin account**: created on first start from `ADMIN_NAME` and
-  `ADMIN_PASSWORD`. The admin has both the admin page and a normal player card.
-- **Forgotten password**: the admin assigns a new word password and sees it once
-  on the admin page. Passwords are stored hashed and are never recoverable.
-- **Stay logged in**: the session cookie lasts 30 days, so phones do not have to
-  log in every time.
+- **Registreren**: jij verzint een naam, de app kiest het wachtwoord. Dat
+  wachtwoord is een van de ingestelde woorden, drie keer achter elkaar
+  (`schaap` wordt `schaapschaapschaap`), en je ziet het precies één keer: direct
+  na het registreren.
+- **Goedkeuren**: een nieuw account kan niet inloggen tot de beheerder het
+  heeft goedgekeurd.
+- **Beheerdersaccount**: wordt bij de eerste start aangemaakt uit `ADMIN_NAME`
+  en `ADMIN_PASSWORD`. De beheerder heeft zowel de beheerpagina als een gewone
+  eigen bingokaart.
+- **Wachtwoord kwijt**: de beheerder wijst een nieuw dier-wachtwoord toe en ziet
+  dat één keer op de beheerpagina. Wachtwoorden staan gehasht opgeslagen en zijn
+  nooit terug te lezen.
+- **Ingelogd blijven**: de sessiecookie is 30 dagen geldig, zodat je op je
+  telefoon niet steeds opnieuw hoeft in te loggen.
 
-### Playing
+### Spelen
 
-- **The card**: nine unique numbers between 10 and 99, generated per session.
-  Unique *within* a card only, so two players can both hold 33 while a single
-  player never holds it twice.
-- **Adding a number**: type a number between 10 and 99 to add it to the session
-  draw. Duplicates are refused, and the list shows who entered what.
-- **Crossing off**: tap a square to mark it. A number that has not been drawn in
-  this session cannot be marked. Tap again to undo a mistake.
-- **Highlight**: a square whose number has been drawn but not yet crossed off
-  pulses, so nobody misses their turn.
-- **Live**: the page polls every three seconds, so drawn numbers, the ranking
-  and the winner appear without reloading.
-- **Top 3**: the three players with the most marked squares in this session.
-- **Winning**: the first full card wins. Everyone sees `HOERA! <naam> heeft
-  gewonnen!` with confetti, and the session locks until the admin resets it.
+- **De kaart**: negen unieke nummers tussen 10 en 99, per sessie opnieuw
+  gegenereerd. Uniek *binnen* een kaart, dus twee spelers kunnen allebei 33
+  hebben terwijl één speler 33 nooit dubbel heeft.
+- **Nummer toevoegen**: tik een nummer tussen 10 en 99 in om het aan de trekking
+  toe te voegen. Dubbele nummers worden geweigerd, en in de lijst staat wie welk
+  nummer heeft ingevoerd.
+- **Afstrepen**: tik op een vakje om het te markeren. Een nummer dat nog niet
+  getrokken is kun je niet afstrepen. Nog een keer tikken maakt een vergissing
+  ongedaan.
+- **Highlight**: een vakje waarvan het nummer wel getrokken maar nog niet
+  afgestreept is, knippert. Zo mist niemand zijn beurt.
+- **Live**: de pagina haalt elke drie seconden de stand op, dus getrokken
+  nummers, de ranglijst en de winnaar verschijnen zonder verversen.
+- **Top 3**: de drie spelers met de meeste afgestreepte vakjes in deze sessie.
+- **Winnen**: de eerste volle kaart wint. Iedereen ziet `HOERA! <naam> heeft
+  gewonnen!` met confetti, en de sessie gaat op slot tot de beheerder reset.
 
-### Admin page
+### Beheerpagina
 
-- Approve waiting accounts and delete accounts.
-- Assign a new password to a player.
-- Reset the session, behind a confirmation. Resetting closes the current session
-  and opens a new one; nothing is deleted, so history stays intact.
-- Standings for the current session.
-- All-time scoreboard: who won the most sessions.
-- Number statistics: how often every number was drawn across all sessions.
+- Wachtende accounts goedkeuren en accounts verwijderen.
+- Een speler een nieuw wachtwoord geven.
+- De sessie resetten, achter een bevestiging. Resetten sluit de huidige sessie
+  af en start een nieuwe; er wordt niets weggegooid, dus de historie blijft
+  kloppen.
+- De stand van de huidige sessie.
+- Scorebord aller tijden: wie heeft de meeste sessies gewonnen.
+- Nummerstatistiek: hoe vaak elk nummer over alle sessies is getrokken.
 
-### Mobile / PWA
+### Mobiel / PWA
 
-A web app manifest and a small service worker make the app installable on a
-phone home screen, running full screen. Static assets are cached; game state is
-always fetched from the network so it is never stale.
+Een web app manifest en een kleine service worker maken de app installeerbaar op
+je startscherm, schermvullend. Statische bestanden worden gecachet; de
+spelstand komt altijd van de server, dus die is nooit verouderd.
 
-### Theme
+### Thema
 
-Catppuccin Latte (light) and Frappe (dark). The system preference decides by
-default; the button in the header cycles through auto, light and dark.
+Catppuccin Latte (licht) en Frappe (donker). Standaard bepaalt je
+systeeminstelling het thema; de knop in de balk wisselt tussen automatisch,
+licht en donker.
 
-## Installation
+## Installatie
 
-### With Docker (production)
+### Met Docker (productie)
 
 ```bash
 git clone git@github.com:Malse-Makker/bingo.git
 cd bingo
 cp .env.example .env
-# Fill in SECRET_KEY, ADMIN_PASSWORD and PASSWORD_WORDS
+# Vul SECRET_KEY, ADMIN_PASSWORD en PASSWORD_WORDS in
 docker compose up -d --build
 ```
 
-Nginx listens on `BINGO_PORT` (9877 by default). TLS and the public hostname are
-handled upstream by Nginx Proxy Manager, so nothing in this project terminates
-TLS.
+Nginx luistert op `BINGO_PORT` (standaard 8123). TLS en de publieke hostnaam
+regelt Nginx Proxy Manager ervoor, dus dit project doet zelf niets met TLS.
 
-### Locally (development)
+### Lokaal (ontwikkelen)
 
 ```bash
 python3 -m venv venv
 ./venv/bin/pip install -r requirements.txt
-cp .env.example .env      # set COOKIE_SECURE=0 for plain HTTP
+cp .env.example .env      # zet COOKIE_SECURE=0 voor gewone HTTP
 ./venv/bin/python run.py
 ```
 
-The app is then at http://127.0.0.1:5000.
+De app draait dan op http://127.0.0.1:5000.
 
-## Configuration
+## Instellingen
 
-All settings come from `.env`, which is never committed.
+Alle instellingen komen uit `.env`, dat nooit in de repository terechtkomt.
 
-| Variable | Meaning |
+| Variabele | Betekenis |
 | --- | --- |
-| `SECRET_KEY` | Required. Signs the session cookie. Generate with `openssl rand -hex 32`. |
-| `ADMIN_NAME` | Name of the built-in admin account. Default `mick`. |
-| `ADMIN_PASSWORD` | Required. Password for that account, applied on first start. |
-| `PASSWORD_WORDS` | Required. Comma-separated words; each becomes a password repeated three times. |
-| `BINGO_PORT` | Host port for nginx. Default `9877`. |
-| `DATA_PATH` | Where the SQLite database lives on the host. Default `./data`. |
-| `COOKIE_SECURE` | `1` (default) for HTTPS, `0` for local plain HTTP. |
-| `DRAW_COOLDOWN_SECONDS` | Seconds a player must wait between entering two numbers. `0` disables it. |
+| `SECRET_KEY` | Verplicht. Ondertekent de sessiecookie. Maak er een met `openssl rand -hex 32`. |
+| `ADMIN_NAME` | Naam van het ingebouwde beheerdersaccount. Standaard `mick`. |
+| `ADMIN_PASSWORD` | Verplicht. Wachtwoord voor dat account, gezet bij de eerste start. |
+| `PASSWORD_WORDS` | Verplicht. Woorden gescheiden door komma's; elk woord wordt drie keer herhaald tot een wachtwoord. |
+| `BINGO_PORT` | Poort op de host waar nginx op luistert. Standaard `8123`. |
+| `DATA_PATH` | Waar de SQLite-database op de host staat. Standaard `./data`. |
+| `COOKIE_SECURE` | `1` (standaard) voor HTTPS, `0` voor lokaal via gewone HTTP. |
+| `DRAW_COOLDOWN_SECONDS` | Aantal seconden dat een speler moet wachten tussen twee nummers. `0` zet het uit. |
 
-The password list lives in `.env` on purpose: the passwords are meant to be easy
-to remember, not secret, and they should not end up in a public repository.
+De woordenlijst staat bewust in `.env`: de wachtwoorden horen makkelijk te
+onthouden te zijn, niet geheim, en horen dus niet in een publieke repository.
 
-## Security
+## Beveiliging
 
-The app is a hobby project for a closed group, but it still follows the usual
-baseline: CSRF protection on every form, hashed passwords, rate limiting on
-login and registration, `HttpOnly` / `SameSite` / `Secure` cookies, a
-`Content-Security-Policy` without inline scripts or styles, and the standard
-nginx security headers. Everything is served from the app's own origin; Font
-Awesome is vendored locally.
+Het is een hobbyproject voor een besloten groep, maar de gebruikelijke basis
+staat er wel: CSRF-bescherming op elk formulier, gehashte wachtwoorden,
+rate limiting op inloggen en registreren, `HttpOnly`- / `SameSite`- /
+`Secure`-cookies, een `Content-Security-Policy` zonder inline scripts of styles,
+en de standaard nginx security headers. Alles komt van de eigen origin; Font
+Awesome staat lokaal in het project.
 
-There is no technical barrier against a player entering their own card numbers.
-That is a deliberate trade-off: the draw list shows who entered which number, so
-the group can see it happen. `DRAW_COOLDOWN_SECONDS` adds a delay between
-entries if that is not enough.
+Er is geen technische drempel tegen een speler die zijn eigen kaartnummers
+invoert. Dat is een bewuste afweging: in de trekkingslijst staat wie welk nummer
+heeft ingevoerd, dus de groep ziet het gebeuren. Met
+`DRAW_COOLDOWN_SECONDS` zet je er een wachttijd tussen als dat niet genoeg is.
 
-## Deployment
+## Uitrollen
 
-Every push to `main` triggers `.github/workflows/deploy.yml`, which SSHes to the
-OVH server and rebuilds the containers there.
+Elke push naar `main` start `.github/workflows/deploy.yml`. Die SSH't naar de
+OVH-server en bouwt de containers daar opnieuw.
 
-## Versioning
+## Versienummers
 
-Semantic versioning, tracked in `VERSION`. The footer shows the version and the
-short commit hash.
+Semantic versioning, bijgehouden in `VERSION`. In de voettekst staan het
+versienummer en de korte commit-hash.
 
 ## Disclaimer
 
-This project was built with the help of AI, as a personal hobby and learning
-project: both to learn more about working with AI and about the subject of the
-project itself. The CI/CD setup (automatic deployment through GitHub Actions) is
-part of that learning process.
+Dit project is gemaakt met hulp van AI, als persoonlijk speel- en leerproject:
+zowel om meer te leren over werken met AI als over het onderwerp van het project
+zelf. De CI/CD-opzet (automatisch uitrollen via GitHub Actions) hoort bij dat
+leerproces.

@@ -49,6 +49,7 @@ def create_app():
         REMEMBER_COOKIE_SECURE=os.environ.get("COOKIE_SECURE", "1") == "1",
         REMEMBER_COOKIE_DURATION=60 * 60 * 24 * 30,
         DRAW_COOLDOWN_SECONDS=int(os.environ.get("DRAW_COOLDOWN_SECONDS", "0")),
+        ADMIN_NAME=os.environ.get("ADMIN_NAME", "mick").strip().lower(),
         APP_VERSION=_read_version(),
         GIT_COMMIT=os.environ.get("GIT_COMMIT", "")[:7],
         GITHUB_URL=os.environ.get(
@@ -85,6 +86,7 @@ def create_app():
     @app.context_processor
     def inject_globals():
         return {
+            "admin_name": app.config["ADMIN_NAME"],
             "app_version": app.config["APP_VERSION"],
             "git_commit": app.config["GIT_COMMIT"],
             "github_url": app.config["GITHUB_URL"],
@@ -116,7 +118,9 @@ def _seed_admin():
     """Create the built-in admin account on first start."""
     from .models import User
 
-    name = os.environ.get("ADMIN_NAME", "mick").strip().lower()
+    from flask import current_app
+
+    name = current_app.config["ADMIN_NAME"]
     password = os.environ.get("ADMIN_PASSWORD", "").strip()
     if not password:
         raise RuntimeError("ADMIN_PASSWORD is required.")

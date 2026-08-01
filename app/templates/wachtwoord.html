@@ -4,14 +4,19 @@
 {% block content %}
 <section class="kaart smal">
   <h1>Hallo {{ naam }}</h1>
-  <p>Dit is je wachtwoord. Schrijf het op, je ziet het hierna niet meer.</p>
 
+  <p>Je wachtwoord is:</p>
   <p class="wachtwoord-vak">{{ wachtwoord }}</p>
-
   <p class="hulptekst">
+    Schrijf het op of sla het op in je wachtwoordmanager. Je ziet het hierna niet
+    meer. Ben je het kwijt? Dan maakt {{ admin_name|capitalize }} een nieuw
+    wachtwoord voor je.
+  </p>
+
+  <p class="tip">
     <i class="fa-solid fa-hourglass-half" aria-hidden="true"></i>
-    Je account moet nog goedgekeurd worden door de beheerder. Zodra dat gebeurd is,
-    kun je inloggen en meespelen.
+    <strong>Vraag {{ admin_name|capitalize }} om je account goed te keuren.</strong>
+    Tot die tijd kun je nog niet inloggen.
   </p>
 
   <a class="knop primair" href="{{ url_for('auth.login') }}">

@@ -6,15 +6,22 @@
   <h1>Account maken</h1>
   <p class="hulptekst">
     Je verzint alleen een naam. Het wachtwoord krijg je van het spel en zie je
-    daarna &eacute;&eacute;n keer op je scherm. De beheerder moet je account nog
-    goedkeuren voordat je kunt meespelen.
+    daarna &eacute;&eacute;n keer op je scherm. {{ admin_name|capitalize }} moet je
+    account nog goedkeuren voordat je kunt meespelen.
+  </p>
+
+  <p class="tip">
+    <i class="fa-solid fa-lightbulb" aria-hidden="true"></i>
+    Gebruik je eigen naam, of iets waar je collega&#39;s je meteen aan herkennen.
+    We spelen dit met het hele team, dus iedereen moet zien wie er wint.
   </p>
 
   <form method="post" class="formulier">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <label for="naam">Naam</label>
     <input type="text" id="naam" name="naam" value="{{ naam }}" autocomplete="username"
-           autocapitalize="none" required minlength="2" maxlength="20">
+           autocapitalize="none" required minlength="2" maxlength="20"
+           placeholder="bijvoorbeeld je voornaam">
 
     <button type="submit" class="knop primair">
       <i class="fa-solid fa-user-plus" aria-hidden="true"></i> Account aanmaken
