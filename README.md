@@ -1,11 +1,10 @@
 # Makkers Bingo
 
-Een kleine bingo-webapp om met collega's te spelen. Iedere speler krijgt een
-3x3-kaart met negen willekeurige nummers tussen de 10 en 99. Nummers komen in
-het spel doordat spelers een code intikken die ze van een van de twee
-authenticator-apps krijgen. Zodra een nummer in de sessie staat, mag iedereen
-die het op zijn kaart heeft het afstrepen. Wie als eerste een volle kaart heeft
-wint, en iedereen krijgt een popup met confetti.
+Een leuke bingo-app om met vrienden te spelen. Iedere speler krijgt een
+3x3-kaart met negen willekeurige nummers tussen de 10 en 99. Zodra iemand een
+nummer intikt staat het in de trekking van de sessie, en mag iedereen die het op
+zijn kaart heeft het afstrepen. Wie als eerste een volle kaart heeft wint, en
+iedereen krijgt een popup met confetti.
 
 Draait op [bingo.makkers.net](https://bingo.makkers.net). De interface en deze
 README zijn in het Nederlands, de code zelf is in het Engels.
@@ -35,8 +34,8 @@ README zijn in het Nederlands, de code zelf is in het Engels.
   gegenereerd. Uniek *binnen* een kaart, dus twee spelers kunnen allebei 33
   hebben terwijl één speler 33 nooit dubbel heeft.
 - **Nummer toevoegen**: tik een nummer tussen 10 en 99 in om het aan de trekking
-  toe te voegen. Dubbele nummers worden geweigerd, en in de lijst staat wie welk
-  nummer heeft ingevoerd.
+  van de sessie toe te voegen. Dubbele nummers worden geweigerd, en in de lijst
+  staat wie welk nummer heeft ingevoerd.
 - **Afstrepen**: tik op een vakje om het te markeren. Een nummer dat nog niet
   getrokken is kun je niet afstrepen. Nog een keer tikken maakt een vergissing
   ongedaan.

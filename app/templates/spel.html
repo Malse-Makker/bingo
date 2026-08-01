@@ -23,7 +23,8 @@
 <section class="kaart">
   <h2><i class="fa-solid fa-plus" aria-hidden="true"></i> Nummer toevoegen</h2>
   <p class="hulptekst">
-    Kreeg je een nummer van een authenticator? Zet het hier in de trekking.
+    Heb je een nieuw nummer? Zet het hier in de trekking, dan kan iedereen die
+    het op zijn kaart heeft het afstrepen.
   </p>
   <form method="post" action="{{ url_for('spel.add_number') }}" class="nummer-form js-nummer">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
